@@ -104,7 +104,7 @@ dependencies {
 Каждое приложение связывается с используемой по умолчанию библиотекой Android, в которой имеются базовые пакеты для построения приложений (со стандартными классами, например Activity, Service, Intent, View, Button, Application, ContentProvider и так далее).
 Однако некоторые пакеты находятся в собственных библиотеках. Если ваше приложение использует код из одного из таких пакетов, оно должно в явном виде потребовать, чтобы его связали с этим пакетом. Это делается через отдельный элемент <uses-library>. 
 
-```
+```xml
 <application ...>
     ...
     <uses-library android:name="com.google.android.things"/>
@@ -114,7 +114,7 @@ dependencies {
 
 Android Things позволяет одновременно устанавливать только одно приложение, а больше нам и не надо. Благодаря этому ограничению появляется возможность декларировать `<intent-filter>` для Activity, как `IOT_LAUCHER` в AndroidManifest приложения, что позволяет запускать это Activity по-умолчанию сразу же при старте девайса. Также оставим стандартный `<intent-filter>` чтобы Android Studio смогла запустить наше приложение после сборки и деплоя.
 
-```
+```xml
 <activity ...>
     ...
     <!-- Launch activity as default from Android Studio -->
@@ -154,7 +154,7 @@ dependencies {
 
 Напишем класс-обёртку для работы с кнопкой. Возможно, реализация через обёртку покажется немного излишней, но таких образом мы сможем инкапсулировать работу с кодом драйвера кнопки и создать собственный интерфейс взаимодействия.
 
-```
+```java
 import com.google.android.things.contrib.driver.button.Button;
   
 public class ButtonWrapper {
@@ -206,7 +206,7 @@ public class ButtonWrapper {
 Воспользуемся этой обёрткой в нашем Activity. Просто передадим в конструктор объекта кнопки название GPIO порта ("BCM4") на Raspberry Pi3, к которому она подключена на схеме. 
 
 
-```
+```java
 public class MainActivity extends Activity {
 
     private static final String GPIO_PIN_BUTTON = "BCM4";
@@ -280,7 +280,7 @@ public class MainActivity extends Activity {
 При реализации обёртки для работы со светодиодом воспользуемся `PeripheralManagerService`, сервисом, который дает доступ к GPIO интерфейсу. Открываем соединение и конфигурируем его для передачи сигнала. К сожалению, если заглянуть в реализацию абстрактного класса `com.google.android.things.pio.Gpio`, то можно увидеть, что вызов почти каждого метода способен генерировать `java.io.IOException`. Для простоты скроем все `try-catch` выражения в нашей обертке. 
 
 
-```
+```java
 public class LedWrapper {
  
     private @Nullable Gpio mGpio;
@@ -331,7 +331,7 @@ public class LedWrapper {
 
 Имплементируем его в наше Activity для каждого светодиода по отдельности. 
 
-```
+```java
 public class MainActivity extends Activity {
 
 
@@ -369,7 +369,7 @@ public class MainActivity extends Activity {
 ![img_motion](https://monosnap.com/file/6NwCcv0SVY6d30VTu3EKQ3sKca7UZ7.png)
 
 
-```
+```java
 public class MotionWrapper {
 
     private @Nullable Gpio mGpio;
@@ -455,7 +455,7 @@ dependencies {
 ![img_servo](https://monosnap.com/file/Ilby67uLNTie3owuee9DDd7BjnGxk7.png)
 
 
-```
+```java
 public class ServoWrapper {
 
     private static final float ANGLE_CLOSE = 0f;
@@ -545,7 +545,7 @@ dependencies {
 Несмотря на всю похожесть, напишем для него отдельную обёртку. 
 
 
-```
+```java
 public class BrightrWrapper {
 
     private @Nullable Button mLightDetector;
@@ -591,7 +591,7 @@ public class BrightrWrapper {
 
 Имплементируем в Activity.
 
-```
+```java
 public class MainActivity extends Activity {
 
     private static final String GPIO_PIN_LIGHT_DETECTOR = "BCM25";
